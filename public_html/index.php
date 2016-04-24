@@ -1,166 +1,43 @@
-<?php
-/**
-* Angular version
-**/
-$ANGULAR_VERSION = "1.4.7";
-?>
 <!DOCTYPE html>
-<html ng-app="MisquoteOfTheDay">
+<html>
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
-		<link type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-		<link type="text/css" href="css/misquote-of-the-day.css" rel="stylesheet" />
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/<?php echo $ANGULAR_VERSION; ?>/angular.min.js"></script>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/<?php echo $ANGULAR_VERSION; ?>/angular-messages.min.js"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-pusher/0.0.14/angular-pusher.min.js"></script>
-		<script type="text/javascript" src="angular/misquote-of-the-day.js"></script>
-		<script type="text/javascript" src="angular/pusher-config.js"></script>
-		<script type="text/javascript" src="angular/services/misquote.js"></script>
-		<script type="text/javascript" src="angular/controllers/misquote.js"></script>
-		<title>Misquote of the Day</title>
+		<title>Misquote Angular 2</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="css/style.css">
+
+		<!-- Bootstrap JS -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+		<!-- IE required polyfills, in this exact order -->
+		<script src="node_modules/es6-shim/es6-shim.min.js"></script>
+		<script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+		<script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
+
+		<script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+		<script src="node_modules/systemjs/dist/system.src.js"></script>
+		<script src="node_modules/rxjs/bundles/Rx.js"></script>
+		<script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+
+		<script>
+			System.config({
+				packages: {
+					app: {
+						format: 'register',
+						defaultExtension: 'js'
+					}
+				}
+			});
+			System.import('app/main')
+				.then(null, console.error.bind(console));
+		</script>
 	</head>
+
 	<body>
-		<main class="container" ng-controller="MisquoteController">
-			<h1>Misquotes</h1>
-			<div class="row">
-				<div class="col-md-4">
-					<img class="img-responsive" src="images/miss-quote.png" alt="">
-				</div>
-				<div class="col-md-8">
-					<blockquote>
-						That is the problem with memes. If you have the right font and the right photo, any quote can seem real. And I'll tell you how I know that. Because for years now you may have seen multiple photos of me comparing gun control to airport security. It's an interesting thought. Here's the thing: I never said that! Even though, I've now seen it so many times now I'm starting to genuinely wonder if I ever did.
-						<footer>
-							John Oliver on <cite>Last Week Tonight</cite>
-						</footer>
-					</blockquote>
-					<p>
-						I now present you with the opportunity to make your own misquotes. Want to claim you solved <var>P</var> = <var>NP</var>? You've come to the right place. Want to prove Sir Isaac Newton was hit on the head with an apple while making apple pie? Done!
-					</p>
-					<h3>Enjoy!</h3>
-				</div>
-			</div>
-			<hr />
-			<div class="row">
-				<div class="col-md-4">
-					<form name="addMisquoteForm" id="addMisquoteForm" class="form-horizontal well" ng-submit="createMisquote(newMisquote, addMisquoteForm.$valid);" ng-hide="isEditing" novalidate>
-						<h2>Create Misquote</h2>
-						<hr />
-						<div class="form-group" ng-class="{ 'has-error': addMisquoteForm.addMisquote.$touched && addMisquoteForm.addMisquote.$invalid }">
-							<label for="addMisquote">Misquote</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-comment" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="addMisquote" id="addMisquote" class="form-control" maxlength="255" ng-model="newMisquote.misquote" ng-minlength="1" ng-maxlength="255" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="addMisquoteForm.addMisquote.$error" ng-if="addMisquoteForm.addMisquote.$touched" ng-hide="addMisquoteForm.addMisquote.$valid">
-								<p ng-message="required">Misquote is required.</p>
-								<p ng-message="minlength">Misquote cannot be empty.</p>
-								<p ng-message="maxlength">Misquote is too long.</p>
-							</div>
-						</div>
-						<div class="form-group" ng-class="{ 'has-error': addMisquoteForm.addAttribution.$touched && addMisquoteForm.addAttribution.$invalid }">
-							<label for="addAttribution">Attribution</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-quote-left" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="addAttribution" id="addAttribution" class="form-control" maxlength="64" ng-model="newMisquote.attribution" ng-minlength="1" ng-maxlength="64" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="addMisquoteForm.addAttribution.$error" ng-if="addMisquoteForm.addAttribution.$touched" ng-hide="addMisquoteForm.addAttribution.$valid">
-								<p ng-message="required">Attribution is required.</p>
-								<p ng-message="minlength">Attribution cannot be empty.</p>
-								<p ng-message="maxlength">Attribution is too long.</p>
-							</div>
-						</div>
-						<div class="form-group" ng-class="{ 'has-error': addMisquoteForm.addSubmitter.$touched && addMisquoteForm.addSubmitter.$invalid }">
-							<label for="addSubmitter">Submitter</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-user" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="addSubmitter" id="addSubmitter" class="form-control" maxlength="64" ng-model="newMisquote.submitter" ng-minlength="1" ng-maxlength="64" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="addMisquoteForm.addSubmitter.$error" ng-if="addMisquoteForm.addSubmitter.$touched" ng-hide="addMisquoteForm.addSubmitter.$valid">
-								<p ng-message="required">Submitter is required.</p>
-								<p ng-message="minlength">Submitter cannot be empty.</p>
-								<p ng-message="maxlength">Submitter is too long.</p>
-							</div>
-						</div>
-						<button type="submit" class="btn btn-info btn-lg" ng-disabled="addMisquoteForm.$invalid"><i class="fa fa-share"></i> Misquote</button>
-						<button type="reset" class="btn btn-warning btn-lg"><i class="fa fa-ban"></i> Cancel</button>
-					</form>
-					<form name="editMisquoteForm" id="editMisquoteForm" class="form-horizontal well" ng-submit="updateMisquote(editedMisquote, editMisquoteForm.$valid);" ng-show="isEditing" novalidate>
-						<h2>Edit Misquote</h2>
-						<hr />
-						<div class="form-group" ng-class="{ 'has-error': editMisquoteForm.editMisquote.$touched && editMisquoteForm.editMisquote.$invalid }">
-							<label for="editMisquote">Misquote</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-comment" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="editMisquote" id="editMisquote" class="form-control" maxlength="255" ng-model="editedMisquote.misquote" ng-minlength="1" ng-maxlength="255" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="editMisquoteForm.editMisquote.$error" ng-if="editMisquoteForm.editMisquote.$touched" ng-hide="editMisquoteForm.editMisquote.$valid">
-								<p ng-message="required">Misquote is required.</p>
-								<p ng-message="minlength">Misquote cannot be empty.</p>
-								<p ng-message="maxlength">Misquote is too long.</p>
-							</div>
-						</div>
-						<div class="form-group" ng-class="{ 'has-error': editMisquoteForm.addAttribution.$touched && editMisquoteForm.addAttribution.$invalid }">
-							<label for="addAttribution">Attribution</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-quote-left" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="addAttribution" id="addAttribution" class="form-control" maxlength="64" ng-model="editedMisquote.attribution" ng-minlength="1" ng-maxlength="64" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="editMisquoteForm.addAttribution.$error" ng-if="editMisquoteForm.addAttribution.$touched" ng-hide="editMisquoteForm.addAttribution.$valid">
-								<p ng-message="required">Attribution is required.</p>
-								<p ng-message="minlength">Attribution cannot be empty.</p>
-								<p ng-message="maxlength">Attribution is too long.</p>
-							</div>
-						</div>
-						<div class="form-group" ng-class="{ 'has-error': editMisquoteForm.addSubmitter.$touched && editMisquoteForm.addSubmitter.$invalid }">
-							<label for="addSubmitter">Submitter</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<i class="fa fa-user" aria-hidden="true"></i>
-								</div>
-								<input type="text" name="addSubmitter" id="addSubmitter" class="form-control" maxlength="64" ng-model="editedMisquote.submitter" ng-minlength="1" ng-maxlength="64" ng-required="true" />
-							</div>
-							<div class="alert alert-danger" role="alert" ng-messages="editMisquoteForm.addSubmitter.$error" ng-if="editMisquoteForm.addSubmitter.$touched" ng-hide="editMisquoteForm.addSubmitter.$valid">
-								<p ng-message="required">Submitter is required.</p>
-								<p ng-message="minlength">Submitter cannot be empty.</p>
-								<p ng-message="maxlength">Submitter is too long.</p>
-							</div>
-						</div>
-						<button type="submit" class="btn btn-info btn-lg" ng-disabled="editMisquoteForm.$invalid"><i class="fa fa-share"></i> Misquote</button>
-						<button class="btn btn-warning btn-lg" ng-click="cancelEditing();"><i class="fa fa-ban"></i> Cancel</button>
-					</form>
-				</div>
-				<div class="col-md-8">
-					<table class="table table-bordered table-hover table-responsive table-striped table-word-wrap">
-						<tr><th>Misquote ID</th><th>Misquote</th><th>Attribution</th><th>Submitter</th><th>Actions</th></tr>
-						<tr ng-repeat="misquote in misquotes">
-							<td>{{ misquote.misquoteId }}</td>
-							<td>{{ misquote.misquote }}</td>
-							<td>{{ misquote.attribution }}</td>
-							<td>{{ misquote.submitter }}</td>
-							<td>
-								<button class="btn btn-info" ng-click="setEditedMisquote(misquote);"><i class="fa fa-pencil"></i></button>
-								<form class="inline" ng-submit="deleteMisquote(misquote.misquoteId);">
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-								</form>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="alerts.length = 0;">{{ alert.msg }}</uib-alert>
-		</main>
+		<misquote-app>Loading...</misquote-app>
 	</body>
 </html>
