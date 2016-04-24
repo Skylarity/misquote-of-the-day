@@ -1,5 +1,5 @@
 {
-  "name": "Misquote of the Day",
+  "name": "misquote-angular2",
   "version": "0.0.1",
   "scripts": {
     "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
